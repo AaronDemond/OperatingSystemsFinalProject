@@ -1,16 +1,7 @@
-/*
- * Peterson's Solution (2-process mutual exclusion)
- *
- * This program simulates two processes competing for a critical section.
- * It uses Peterson’s algorithm to guarantee that only one process is inside
- * the critical section at any time.
- *
- * Threads are used to simulate processes, but the logic is the same.
- */
-
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "logger.h"
 
 #define ITERATIONS 5
 
@@ -26,9 +17,11 @@ int turn = 0;
  * Only one process should be executing this at a time.
  */
 void critical_section(int id) {
+    write_log_input("PETERSON", "critical_section", id ? "process1" : "process0");
     printf("Process %d ENTERING critical section\n", id);
-    sleep(1);  // simulate work
+    sleep(1); // simulate work
     printf("Process %d EXITING critical section\n", id);
+    write_log("PETERSON", "Critical section exit");
 }
 
 /*
@@ -39,7 +32,12 @@ void *process(void *arg) {
     int id = *(int *)arg;
     int other = 1 - id;
 
+    char proc_name[16];
+    sprintf(proc_name, "process%d", id);
+    write_log_input("PETERSON", "process_id", proc_name);
+
     for (int i = 0; i < ITERATIONS; i++) {
+        write_log_input("PETERSON", "iteration", i);
 
         /*
          * ENTRY SECTION
@@ -48,6 +46,7 @@ void *process(void *arg) {
          */
         flag[id] = 1;
         turn = other;
+        write_log("PETERSON", "Entry section complete");
 
         /*
          * Busy waiting (spin)
@@ -55,6 +54,8 @@ void *process(void *arg) {
          * we stay in this loop until it is safe to proceed.
          */
         while (flag[other] && turn == other);
+
+        write_log("PETERSON", "Busy waiting ended");
 
         /*
          * CRITICAL SECTION
@@ -67,6 +68,7 @@ void *process(void *arg) {
          * Clear the flag so the other process can enter.
          */
         flag[id] = 0;
+        write_log("PETERSON", "Exit section complete");
 
         /*
          * REMAINDER SECTION
@@ -76,6 +78,7 @@ void *process(void *arg) {
         sleep(1);
     }
 
+    write_log("PETERSON", "Process finished all iterations");
     return NULL;
 }
 
@@ -87,6 +90,7 @@ int main() {
     int id1 = 0;
     int id2 = 1;
 
+    write_log("PETERSON", "Module started");
     printf("Starting Peterson's Solution...\n\n");
 
     pthread_create(&t1, NULL, process, &id1);
@@ -96,6 +100,7 @@ int main() {
     pthread_join(t2, NULL);
 
     printf("\nSimulation finished.\n");
+    write_log("PETERSON", "Module finished");
 
     return 0;
 }
