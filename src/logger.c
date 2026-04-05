@@ -1,37 +1,50 @@
 /*
- * Module 1: Logging System (IPC) - Helper Functions
- * Purpose: Centralized logging functions for all modules.
- * All modules compile with this file linked.
+ * Module 1: Logging System (IPC)
  */
 
 #include <stdio.h>
 #include <time.h>
-#include <string.h>
+#include <stdarg.h>
 #include "logger.h"
 
-void write_log(const char *module, const char *message) {
+static void vlog_write(const char *module, const char *level, const char *format, va_list args) {
     FILE *fp;
     time_t now;
     struct tm *time_info;
     char timestamp[64];
+    char buffer[1024];
 
     fp = fopen("../logs/logs.txt", "a");
-    if (fp == NULL) {
-        fprintf(stderr, "ERROR: Cannot open log file\n");
-        return;
-    }
+    if (fp == NULL) return;
 
     time(&now);
     time_info = localtime(&now);
     strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", time_info);
 
-    fprintf(fp, "[%s] [%s] %s\n", timestamp, module, message);
-    fflush(fp);
+    vsnprintf(buffer, sizeof(buffer), format, args);
+
+    fprintf(fp, "[%s] [%s:%s] %s\n", timestamp, module, level, buffer);
     fclose(fp);
 }
 
-void write_log_input(const char *module, const char *field, const char *value) {
-    char message[256];
-    snprintf(message, sizeof(message), "INPUT %s = %s", field, value);
-    write_log(module, message);
+void log_info(const char *module, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vlog_write(module, "INFO", format, args);
+    va_end(args);
+}
+
+void log_error(const char *module, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vlog_write(module, "ERROR", format, args);
+    va_end(args);
+}
+
+int main() {
+    printf("=== Logger Module Ready ===\n");
+    log_info("LOGGER", "Logger started - supports any data type!");
+    printf("Press Enter to exit...\n");
+    getchar();
+    return 0;
 }
