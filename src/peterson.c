@@ -1,3 +1,13 @@
+/*
+ * Peterson's Solution (2-process mutual exclusion)
+ *
+ * This program simulates two processes competing for a critical section.
+ * It uses Peterson’s algorithm to guarantee that only one process is inside
+ * the critical section at any time.
+ *
+ * Threads are used to simulate processes, but the logic is the same.
+ */
+
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
