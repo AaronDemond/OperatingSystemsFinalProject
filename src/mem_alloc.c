@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include "logger.h"
+
 
 typedef struct {
   unsigned int start;
@@ -46,9 +48,13 @@ void mba_compact(mblock_array *arr) {
                                      .is_free = true,
                                      .pid = 0};
   arr->curr_cap = allocated + 1;
+  LOG("Memory compaction executed");
+
 }
 
 void mba_push(mblock_array *arr, unsigned int size, unsigned int pid) {
+  LOGF("Allocation request PID=%u SIZE=%u", pid, size);
+
   mem_block *blocks = arr->data;
   int data_location = -1;
   for (int i = 0; i < arr->curr_cap; i++) {
@@ -85,15 +91,21 @@ void mba_push(mblock_array *arr, unsigned int size, unsigned int pid) {
         total_free += arr->data[i].capacity;
     }
     if (total_free >= size) {
+            LOG("Fragmentation detected — performing compaction");
+
       mba_compact(arr);
       mba_push(arr, size, pid);
     } else {
       printf("Not enough memory.\n");
+            LOG("Allocation failed — insufficient memory");
+
     }
   }
 }
 
 void mba_dealloc(mblock_array *arr, unsigned int pid) {
+    LOGF("Deallocation request PID=%u", pid);
+
   for (unsigned int i = 0; i < arr->curr_cap; i++) {
     if (arr->data[i].pid == pid) {
       arr->data[i].pid = 0;
@@ -120,6 +132,8 @@ void mba_dealloc(mblock_array *arr, unsigned int pid) {
 }
 
 void mba_print(mblock_array *arr) {
+    LOG("Displaying memory map");
+
   printf("\n%-10s %-10s %-10s\n", "Address", "Size", "Status");
   printf("------------------------------\n");
   for (unsigned int i = 0; i < arr->curr_cap; i++) {
@@ -150,6 +164,8 @@ int main(void) {
   unsigned int total_mem;
   printf("Enter total memory size: ");
   scanf("%u", &total_mem);
+  LOGF("Total memory entered: %u", total_mem);
+
 
   mblock_array arr;
   mba_init(&arr, 8, total_mem);
@@ -161,6 +177,8 @@ int main(void) {
   unsigned int num_holes;
   printf("Enter number of initial holes: ");
   scanf("%u", &num_holes);
+  LOGF("Number of holes entered: %u", num_holes);
+
 
   for (unsigned int i = 0; i < num_holes; i++) {
     unsigned int start, size;
@@ -168,6 +186,8 @@ int main(void) {
     scanf("%u", &start);
     printf("Hole %u size: ", i + 1);
     scanf("%u", &size);
+    LOGF("Hole defined start=%u size=%u", start, size);
+
 
     for (unsigned int j = 0; j < arr.curr_cap; j++) {
       mem_block *b = &arr.data[j];
@@ -216,6 +236,8 @@ int main(void) {
     printf("5. Exit\n");
     printf("Choice: ");
     scanf("%d", &choice);
+    LOGF("Memory menu choice: %d", choice);
+
 
     switch (choice) {
     case 1: {
@@ -244,6 +266,8 @@ int main(void) {
       break;
     case 5:
       printf("Exiting.\n");
+      LOG("Memory manager exited");
+
       break;
     default:
       printf("Invalid choice.\n");
