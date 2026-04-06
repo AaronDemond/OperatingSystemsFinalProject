@@ -1,14 +1,19 @@
 #include <stdio.h>
+#include "logger.h"
 
 int main()
 {
     double P;
     int N;
 
+    LOG("Amdahl module started");
+
     // Input
     printf("Enter parallel fraction (0-1): ");
     scanf("%lf", &P);
+    LOGF("Parallel fraction selected: %s", &P);
 
+    
     if (P < 0 || P > 1)
     {
         printf("Invalid input. P must be between 0 and 1.\n");
@@ -17,6 +22,8 @@ int main()
 
     printf("Enter number of cores: ");
     scanf("%d", &N);
+    LOGF("Number of cores selected: %s", &N);
+
 
     if (N < 1)
     {
@@ -33,6 +40,9 @@ int main()
     printf("Serial Execution Time: 1.00\n");
     printf("Parallel Execution Time: %.2f\n", parallel_time);
     printf("Speedup: %.2fx\n", speedup);
+
+    LOG("Amdahl speedup calculated");
+
 
     return 0;
 }
