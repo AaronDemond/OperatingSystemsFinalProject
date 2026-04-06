@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h> // for listing files
+#include "logger.h"
 
 // Function prototypes
 void create_file();
@@ -45,6 +46,7 @@ int main()
             delete_file();
             break;
         case 5:
+            LOG("User exited file management");
             printf("Exiting...\n");
             return 0;
         default:
@@ -61,12 +63,15 @@ void create_file()
 
     printf("Enter filename: ");
     scanf("%99s", filename);
+    LOGF("Create file requested: %d", filename);
 
+    
     FILE *fp = fopen(filename, "w");
 
     if (fp == NULL)
     {
         printf("Error creating file\n");
+        LOG("File creation failed");
         return;
     }
 
@@ -80,6 +85,7 @@ void create_file()
     fclose(fp);
 
     printf("File created successfully\n");
+    LOG("File created");
 }
 
 // ================= READ FILE =================
@@ -92,6 +98,8 @@ void read_file()
     // Prompt user for the file name
     printf("Enter filename: ");
     scanf("%s", filename); // Read file name (stops at whitespace)
+    LOGF("Read file requested %d", filename);
+
 
     // Open the file in read mode ("r") and obtain a file stream pointer
     FILE *fp = fopen(filename, "r");
@@ -100,11 +108,14 @@ void read_file()
     if (fp == NULL)
     {
         printf("File not found\n");
+        LOG("File read failed");
         return; // Exit function if file cannot be opened
     }
 
     // Print header for clarity
     printf("\n--- File Content ---\n");
+    LOG("File read");
+
 
     // Read the file line by line
     // fgets reads up to a newline or buffer size and returns NULL at end of file
@@ -136,6 +147,8 @@ void list_files()
 
     // Print header for clarity
     printf("\n--- Files in Directory ---\n");
+    LOG("Listing files");
+
 
     // Iterate through directory entries one by one
     // readdir returns a pointer to the next entry, or NULL when no more entries exist
@@ -158,15 +171,21 @@ void delete_file()
     // Get file name from user
     printf("Enter filename: ");
     scanf("%s", filename);
+    LOGF("Delete file %d", filename);
+
 
     // Attempt to delete the file
     // remove() returns 0 on success, non-zero on failure
     if (remove(filename) == 0)
     {
         printf("File deleted successfully\n");
+        LOG("File deleted");
+
     }
     else
     {
         printf("Error deleting file\n");
+        LOG("File deletion failed");
+
     }
 }
