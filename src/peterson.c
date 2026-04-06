@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "logger.h"
 
 #define ITERATIONS 5
 
@@ -27,8 +28,12 @@ int turn = 0;
  */
 void critical_section(int id) {
     printf("Process %d ENTERING critical section\n", id);
+        LOG("Entering critical section");
+
     sleep(1);  // simulate work
     printf("Process %d EXITING critical section\n", id);
+        LOG("Leaving critical section");
+
 }
 
 /*
@@ -86,6 +91,7 @@ int main() {
     pthread_t t1, t2;
     int id1 = 0;
     int id2 = 1;
+    LOG("Peterson simulation started");
 
     printf("Starting Peterson's Solution...\n\n");
 
@@ -96,6 +102,6 @@ int main() {
     pthread_join(t2, NULL);
 
     printf("\nSimulation finished.\n");
-
+    LOG("Peterson simulation finished");
     return 0;
 }
