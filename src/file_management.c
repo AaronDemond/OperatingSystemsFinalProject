@@ -72,9 +72,11 @@ void create_file()
 
     printf("Enter content: ");
     getchar(); // clear newline from buffer
-    fgets(content, sizeof(content), stdin);
+    while (fgets(content, sizeof(content), stdin) != NULL)
+    {
+        fprintf(fp, "%s", content);
+    }
 
-    fprintf(fp, "%s", content);
     fclose(fp);
 
     printf("File created successfully\n");
