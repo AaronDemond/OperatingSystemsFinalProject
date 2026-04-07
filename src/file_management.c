@@ -63,7 +63,7 @@ void create_file()
 
     printf("Enter filename: ");
     scanf("%99s", filename);
-    LOGF("Create file requested: %d", filename);
+    LOGF("Create file requested: %s", filename);
 
     
     FILE *fp = fopen(filename, "w");
@@ -75,7 +75,8 @@ void create_file()
         return;
     }
 
-    printf("Enter content: ");
+    printf("Enter content:\n");
+    printf("--Save & Exit: Crtl+D(UNIX) or Ctrl+Z(Windows)--\n");
     getchar(); // clear newline from buffer
     while (fgets(content, sizeof(content), stdin) != NULL)
     {
@@ -99,7 +100,7 @@ void read_file()
     // Prompt user for the file name
     printf("Enter filename: ");
     scanf("%s", filename); // Read file name (stops at whitespace)
-    LOGF("Read file requested %d", filename);
+    LOGF("Read file requested %s", filename);
 
 
     // Open the file in read mode ("r") and obtain a file stream pointer
@@ -172,7 +173,7 @@ void delete_file()
     // Get file name from user
     printf("Enter filename: ");
     scanf("%s", filename);
-    LOGF("Delete file %d", filename);
+    LOGF("Delete file %s", filename);
 
 
     // Attempt to delete the file
