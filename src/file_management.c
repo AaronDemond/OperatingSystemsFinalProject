@@ -81,6 +81,7 @@ void create_file()
     {
         fprintf(fp, "%s", content);
     }
+    clearerr(stdin); // clear EOF flag
 
     fclose(fp);
 
