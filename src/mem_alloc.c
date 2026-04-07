@@ -1,3 +1,4 @@
+#include "logger.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +50,7 @@ int read_int(const char *prompt, int *out) {
   return 1;
 }
 
-// Dynamic array operations for memory_block storage
+// Dynamic array operations
 
 void mba_init(mblock_array *arr, unsigned int cap, unsigned int total_mem) {
   arr->curr_cap = 0;
@@ -72,12 +73,12 @@ void mba_insert(mblock_array *arr, unsigned int index, mem_block block) {
   arr->curr_cap++;
 }
 
-// Core operations implementing project requirements
+// Core operations
 
 void mba_compact(mblock_array *arr) {
   unsigned int curr_start = 0;
   unsigned int allocated = 0;
-  // slides all allocated blocks to the front
+  // slide all allocated blocks to the front
   for (unsigned int i = 0; i < arr->curr_cap; i++) {
     if (!arr->data[i].is_free) {
       arr->data[allocated] = arr->data[i];
@@ -92,9 +93,16 @@ void mba_compact(mblock_array *arr) {
                                      .is_free = true,
                                      .pid = 0};
   arr->curr_cap = allocated + 1;
+  LOG("Memory compaction executed");
 }
 
 void mba_push(mblock_array *arr, unsigned int size, unsigned int pid) {
+  if (size == 0 || size > arr->total_mem) {
+    printf("Invalid allocation size.\n");
+    return;
+  }
+  LOGF("Allocation request PID=%u SIZE=%u", pid, size);
+
   mem_block *blocks = arr->data;
   int loc = -1;
 
@@ -133,15 +141,18 @@ void mba_push(mblock_array *arr, unsigned int size, unsigned int pid) {
         total_free += arr->data[i].capacity;
     }
     if (total_free >= size) {
+      LOG("Fragmentation detected — performing compaction");
       mba_compact(arr);
       mba_push(arr, size, pid);
     } else {
       printf("Not enough memory.\n");
+      LOG("Allocation failed — insufficient memory");
     }
   }
 }
 
 void mba_dealloc(mblock_array *arr, unsigned int pid) {
+  LOGF("Deallocation request PID=%u", pid);
   bool found = false;
   for (unsigned int i = 0; i < arr->curr_cap; i++) {
     if (!arr->data[i].is_free && arr->data[i].pid == pid) {
@@ -171,6 +182,7 @@ void mba_dealloc(mblock_array *arr, unsigned int pid) {
 }
 
 void mba_print(mblock_array *arr) {
+  LOG("Displaying memory map");
   printf("\n%-10s %-10s %-10s\n", "Address", "Size", "Status");
   printf("------------------------------\n");
   for (unsigned int i = 0; i < arr->curr_cap; i++) {
@@ -186,9 +198,13 @@ void mba_print(mblock_array *arr) {
 void mba_free(mblock_array *arr) { free(arr->data); }
 
 int main(void) {
-  unsigned int total_mem;
-  while (!read_uint("Enter total memory size: ", &total_mem)) {
+  unsigned int total_mem = 0;
+  while (!read_uint("Enter total memory size: ", &total_mem) ||
+         total_mem == 0) {
+    if (total_mem == 0)
+      printf("Must be greater than 0.\n");
   }
+  LOGF("Total memory entered: %u", total_mem);
 
   mblock_array arr;
   mba_init(&arr, 8, total_mem);
@@ -201,6 +217,7 @@ int main(void) {
   unsigned int num_holes;
   while (!read_uint("Enter number of initial holes: ", &num_holes)) {
   }
+  LOGF("Number of holes entered: %u", num_holes);
 
   for (unsigned int i = 0; i < num_holes; i++) {
     unsigned int start, size;
@@ -209,10 +226,27 @@ int main(void) {
     while (!read_uint("Hole size: ", &size)) {
     }
 
-    // punch a free hole into the allocated block that contains 'start'
+    // bounds check
+    if (start >= total_mem || size == 0 || start + size > total_mem) {
+      printf("Hole exceeds memory bounds.\n");
+      i--;
+      continue;
+    }
+
+    // find the block containing 'start' and validate placement
+    bool placed = false;
     for (unsigned int j = 0; j < arr.curr_cap; j++) {
       mem_block *b = &arr.data[j];
       if (start >= b->start && start < b->start + b->capacity) {
+        if (b->is_free) {
+          printf("Hole overlaps an existing free region.\n");
+          break;
+        }
+        if (start + size > b->start + b->capacity) {
+          printf("Hole spans multiple blocks.\n");
+          break;
+        }
+
         unsigned int before_size = start - b->start;
         unsigned int after_start = start + size;
         unsigned int after_size = (b->start + b->capacity) - after_start;
@@ -240,8 +274,15 @@ int main(void) {
             mba_insert(&arr, j + 1, after);
           }
         }
+        placed = true;
         break;
       }
+    }
+    if (!placed) {
+      printf("Invalid hole, try again.\n");
+      i--;
+    } else {
+      LOGF("Hole defined start=%u size=%u", start, size);
     }
   }
 
@@ -258,6 +299,7 @@ int main(void) {
     printf("5. Exit\n");
     if (!read_int("Choice: ", &choice))
       continue;
+    LOGF("Memory menu choice: %d", choice);
 
     switch (choice) {
     case 1: {
@@ -286,6 +328,7 @@ int main(void) {
       break;
     case 5:
       printf("Exiting.\n");
+      LOG("Memory manager exited");
       break;
     default:
       printf("Invalid choice.\n");
