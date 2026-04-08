@@ -4,31 +4,39 @@
 int main()
 {
     double P;
-    int N;
+    long long N;
 
     LOG("Amdahl module started");
 
-    // Input
-    printf("Enter parallel fraction (0-1): ");
-    scanf("%lf", &P);
-    LOGF("Parallel fraction selected: %.2f", P);
-
-
-    if (P < 0 || P > 1)
-    {
-        printf("Invalid input. P must be between 0 and 1.\n");
-        return 1;
+    // Input parallel fraction
+    while (1) {
+        printf("Enter parallel fraction (0-1): ");
+        if (scanf("%lf", &P) != 1) {
+            printf("Invalid input.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+        if (P < 0 || P > 1) {
+            printf("P must be between 0 and 1.\n");
+            continue;
+        }
+        break;
     }
+    LOGF("Parallel fraction selected: %.4f", P);
 
-    printf("Enter number of cores: ");
-    scanf("%d", &N);
-    LOGF("Number of cores selected: %d", N);
-
-
-    if (N < 1)
-    {
-        printf("Invalid input. Number of cores must be >= 1.\n");
-        return 1;
+    // Input number of cores
+    while (1) {
+        printf("Enter number of cores: ");
+        if (scanf("%lld", &N) != 1) {
+            printf("Invalid input.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+        if (N < 1) {
+            printf("Number of cores must be >= 1.\n");
+            continue;
+        }
+        break;
     }
 
     // Amdahl's Law
@@ -37,11 +45,11 @@ int main()
 
     // Output
     printf("\n--- Results ---\n");
-    printf("Serial Execution Time: 1.00\n");
-    printf("Parallel Execution Time: %.2f\n", parallel_time);
-    printf("Speedup: %.2fx\n", speedup);
+    printf("Serial Execution Time: 1.0000\n");
+    printf("Parallel Execution Time: %.4f\n", parallel_time);
+    printf("Speedup: %.4fx\n", speedup);
 
-    LOGF("Speedup Calculated: %.2f", speedup);
+    LOGF("Speedup Calculated: %.4f", speedup);
     LOG("Amdahl speedup calculated");
 
 
