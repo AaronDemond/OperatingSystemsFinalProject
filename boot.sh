@@ -1,25 +1,27 @@
 #!/bin/bash
 
-echo "Cleaning previous build..."
+rm -rf bin logs
+echo "Cleaned old build and logs."
 
-rm -rf bin
-rm -rf logs
+mkdir -p bin logs
+echo "Created /bin and /logs directories."
 
-mkdir bin
-mkdir logs
+gcc -o bin/logger src/logger.c
+if [ $? -eq 0 ]; then echo "[OK] logger"; else echo "[FAIL] logger"; exit 1; fi
 
-echo "Compiling logger..."
-gcc src/logger.c -o bin/logger
+for module in file_management peterson memory amdahl main_menu; do
+    gcc -o "bin/$module" "src/$module.c"
+    if [ $? -eq 0 ]; then
+        echo "[OK] $module"
+    else
+        echo "[FAIL] $module"
+        exit 1
+    fi
+done
 
-echo "Compiling modules..."
+echo ""
+echo "All modules compiled successfully."
+echo "Starting main menu..."
+echo ""
 
-gcc src/file_management.c -o bin/file_management
-gcc src/amdahls_law.c -o bin/amdahl
-gcc src/mem_alloc.c -o bin/memory
-gcc src/peterson.c -lpthread -o bin/peterson
-gcc src/main_menu.c -o bin/main_menu
-
-echo "Running system..."
-
-cd bin
-./main_menu
+cd bin && ./main_menu

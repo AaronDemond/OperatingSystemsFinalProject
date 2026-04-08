@@ -1,35 +1,27 @@
-[Tue Apr  7 20:28:19 2026] [src/main_menu.c:41] System started
-[Tue Apr  7 20:28:21 2026] [src/main_menu.c:62] Main menu choice: 3
-[Tue Apr  7 20:28:21 2026] [src/main_menu.c:82] Launching Memory module
-[Tue Apr  7 20:28:23 2026] [src/mem_alloc.c:207] Total memory entered: 124
-[Tue Apr  7 20:28:25 2026] [src/mem_alloc.c:220] Number of holes entered: 3
-[Tue Apr  7 20:28:36 2026] [src/mem_alloc.c:285] Hole defined start=123 size=1
-[Tue Apr  7 20:28:48 2026] [src/mem_alloc.c:285] Hole defined start=12 size=111
-[Tue Apr  7 20:28:51 2026] [src/mem_alloc.c:285] Hole defined start=0 size=3
-[Tue Apr  7 20:28:51 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:29:01 2026] [src/mem_alloc.c:302] Memory menu choice: 1
-[Tue Apr  7 20:29:05 2026] [src/mem_alloc.c:104] Allocation request PID=14 SIZE=13
-[Tue Apr  7 20:29:08 2026] [src/mem_alloc.c:302] Memory menu choice: 3
-[Tue Apr  7 20:29:08 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:29:10 2026] [src/mem_alloc.c:302] Memory menu choice: 3
-[Tue Apr  7 20:29:10 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:29:39 2026] [src/mem_alloc.c:302] Memory menu choice: 4
-[Tue Apr  7 20:29:39 2026] [src/mem_alloc.c:96] Memory compaction executed
-[Tue Apr  7 20:29:39 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:29:42 2026] [src/mem_alloc.c:302] Memory menu choice: 5
-[Tue Apr  7 20:29:42 2026] [src/mem_alloc.c:331] Memory manager exited
-[Tue Apr  7 20:29:42 2026] [src/main_menu.c:62] Main menu choice: 3
-[Tue Apr  7 20:29:42 2026] [src/main_menu.c:82] Launching Memory module
-[Tue Apr  7 20:29:57 2026] [src/mem_alloc.c:207] Total memory entered: 1
-[Tue Apr  7 20:29:58 2026] [src/mem_alloc.c:220] Number of holes entered: 1
-[Tue Apr  7 20:30:02 2026] [src/mem_alloc.c:285] Hole defined start=0 size=1
-[Tue Apr  7 20:30:02 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:30:05 2026] [src/mem_alloc.c:302] Memory menu choice: 4
-[Tue Apr  7 20:30:05 2026] [src/mem_alloc.c:96] Memory compaction executed
-[Tue Apr  7 20:30:05 2026] [src/mem_alloc.c:185] Displaying memory map
-[Tue Apr  7 20:30:07 2026] [src/mem_alloc.c:302] Memory menu choice: 2
-[Tue Apr  7 20:30:09 2026] [src/mem_alloc.c:155] Deallocation request PID=0
-[Tue Apr  7 20:30:11 2026] [src/mem_alloc.c:302] Memory menu choice: 5
-[Tue Apr  7 20:30:11 2026] [src/mem_alloc.c:331] Memory manager exited
-[Tue Apr  7 20:30:14 2026] [src/main_menu.c:62] Main menu choice: 5
-[Tue Apr  7 20:30:14 2026] [src/main_menu.c:92] System exiting
+[Tue Apr  7 22:20:29 2026] [src/main_menu.c:41] System started
+[Tue Apr  7 22:20:53 2026] [src/main_menu.c:62] Main menu choice: 4
+[Tue Apr  7 22:20:53 2026] [src/main_menu.c:87] Launching Amdahl module
+[Tue Apr  7 22:20:53 2026] [src/amdahl.c:9] Amdahl module started
+[Tue Apr  7 22:20:56 2026] [src/amdahl.c:14] Parallel fraction selected: 0.76
+[Tue Apr  7 22:20:58 2026] [src/amdahl.c:25] Number of cores selected: 15
+[Tue Apr  7 22:20:58 2026] [src/amdahl.c:44] Speedup Calculated: 3.44
+[Tue Apr  7 22:20:58 2026] [src/amdahl.c:45] Amdahl speedup calculated
+[Tue Apr  7 22:21:15 2026] [src/main_menu.c:62] Main menu choice: 3
+[Tue Apr  7 22:21:15 2026] [src/main_menu.c:82] Launching Memory module
+[Tue Apr  7 22:21:18 2026] [src/memory.c:207] Total memory entered: 123
+[Tue Apr  7 22:21:19 2026] [src/memory.c:220] Number of holes entered: 1
+[Tue Apr  7 22:21:25 2026] [src/memory.c:285] Hole defined start=11 size=100
+[Tue Apr  7 22:21:25 2026] [src/memory.c:185] Displaying memory map
+[Tue Apr  7 22:21:31 2026] [src/memory.c:302] Memory menu choice: 4
+[Tue Apr  7 22:21:31 2026] [src/memory.c:96] Memory compaction executed
+[Tue Apr  7 22:21:31 2026] [src/memory.c:185] Displaying memory map
+[Tue Apr  7 22:21:32 2026] [src/memory.c:302] Memory menu choice: 3
+[Tue Apr  7 22:21:32 2026] [src/memory.c:185] Displaying memory map
+[Tue Apr  7 22:21:35 2026] [src/memory.c:302] Memory menu choice: 2
+[Tue Apr  7 22:21:35 2026] [src/memory.c:155] Deallocation request PID=0
+[Tue Apr  7 22:21:37 2026] [src/memory.c:302] Memory menu choice: 3
+[Tue Apr  7 22:21:37 2026] [src/memory.c:185] Displaying memory map
+[Tue Apr  7 22:21:42 2026] [src/memory.c:302] Memory menu choice: 5
+[Tue Apr  7 22:21:42 2026] [src/memory.c:331] Memory manager exited
+[Tue Apr  7 22:21:43 2026] [src/main_menu.c:62] Main menu choice: 5
+[Tue Apr  7 22:21:43 2026] [src/main_menu.c:92] System exiting
